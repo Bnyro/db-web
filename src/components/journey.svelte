@@ -4,7 +4,7 @@
 
 <div>
 	{#each journey.legs as route}
-		<div>{route.origin.name} -> {route.destination.name}</div>
+		<div>{route.plannedDeparture}: {route.origin.name} -> {route.destination.name}</div>
 	{/each}
 
 	<hr />

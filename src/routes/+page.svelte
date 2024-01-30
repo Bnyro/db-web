@@ -16,48 +16,58 @@
 
 	let locationResults: any[] = [];
 	let journeyResults: any[] = [];
+	let latestLocationRequest: string = '';
+	let skipNextLocationChange = false;
 
-	function findLocations(query: string) {
-		getLocations(query).then((locations: any[]) => {
-			locationResults = locations;
-		});
+	function findLocations(query: string, currentDir: Direction) {
+		if (query.length < 3) {
+			locationResults = [];
+			return;
+		}
+
+		if (skipNextLocationChange) {
+			skipNextLocationChange = false;
+			return;
+		}
+
+		currentTextField = currentDir;
+		setTimeout(() => {
+			if (currentTextField != currentDir || latestLocationRequest == query) return;
+			if (currentDir == Direction.Start && query != startLocationStr) return;
+			if (currentDir == Direction.End && query != endLocationStr) return;
+
+			latestLocationRequest = query;
+			getLocations(query).then((locations: any[]) => {
+				locationResults = locations;
+			});
+		}, 300);
+	}
+
+	$: {
+		findLocations(startLocationStr, Direction.Start);
+		findLocations(endLocationStr, Direction.End);
 	}
 
 	function findJourneys() {
 		if (!startLocation || !endLocation) return;
+		locationResults = [];
 
-		getJourneys(startLocation, endLocation).then((resp: any) => {
+		getJourneys({ startLocation, endLocation }).then((resp: any) => {
 			journeyResults = resp.journeys;
-			console.log(journeyResults);
 		});
 	}
 </script>
 
 <h1>DB-Web</h1>
-<input
-	type="text"
-	bind:value={startLocationStr}
-	placeholder="Start"
-	on:change={() => {
-		currentTextField = Direction.Start;
-		findLocations(startLocationStr);
-	}}
-/>
-<input
-	type="text"
-	bind:value={endLocationStr}
-	placeholder="End"
-	on:change={() => {
-		currentTextField = Direction.End;
-		findLocations(endLocationStr);
-	}}
-/>
+<input type="text" bind:value={startLocationStr} placeholder="Start" />
+<input type="text" bind:value={endLocationStr} placeholder="End" />
 <button on:click={findJourneys}>Search</button>
 
 {#each locationResults as location}
 	<div
 		class="cursor-pointer"
 		on:click={() => {
+			skipNextLocationChange = true;
 			if (currentTextField == Direction.Start) {
 				startLocationStr = location.name ?? location.address;
 				startLocation = location;
