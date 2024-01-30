@@ -1,6 +1,6 @@
 const userAgent = 'Mozilla/5.0';
 const amountOfLocationResults = 15;
-const amountOfJourneyResults = 7;
+const amountOfJourneyResults = 6;
 const baseUrl = "https://v6.db.transport.rest";
 
 async function fetchJson(url: string, options: any = {}) {

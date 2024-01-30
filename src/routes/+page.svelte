@@ -51,6 +51,7 @@
 	function findJourneys() {
 		if (!startLocation || !endLocation) return;
 		locationResults = [];
+		journeyResults = [];
 
 		getJourneys({ startLocation, endLocation }).then((resp: any) => {
 			journeyResults = resp.journeys;
