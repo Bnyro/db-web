@@ -90,7 +90,7 @@
 </div>
 
 {#if journeyResults}
-	<div class="journeys-container">
+	<div id="journeys-container">
 		{#each journeyResults as journeyResult}
 			<Journey journey={journeyResult} />
 		{/each}
@@ -126,5 +126,9 @@
 
 	.address {
 		min-width: 100%;
+	}
+
+	#journeys-container {
+		margin: 2rem 1rem 0rem 1rem;
 	}
 </style>

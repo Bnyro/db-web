@@ -21,26 +21,31 @@
 
 <div>
 	<div>
-		Planned departure: {formatTime(journey.legs[0].departure)} from {journey.legs[0].destination
-			.name}
+		Planned departure <strong
+			>{formatTime(journey.legs[0].departure)} from {journey.legs[0].origin.name}</strong
+		>
 	</div>
 	<div>
-		Planned arrival: {formatTime(journey.legs[journey.legs.length - 1].arrival)}
+		Planned arrival <strong
+			>{formatTime(journey.legs[journey.legs.length - 1].arrival)} at {journey.legs[
+				journey.legs.length - 1
+			].destination.name}</strong
+		>
 	</div>
 	<div>
-		Duration: {dateDiff(journey.legs[0].departure, journey.legs[journey.legs.length - 1].arrival)}
-	</div>
-	<div>
-		Changes: {journey.legs.length - 1}
+		Duration: {dateDiff(journey.legs[0].departure, journey.legs[journey.legs.length - 1].arrival)},
+		{journey.legs.length - 1} changes
 	</div>
 	<br />
 	{#each journey.legs as route}
 		{#if !route.walking}
 			<div>
+				<strong>{route.line.name.replace(' ', '')} to {route.direction}</strong>
+			</div>
+			<div>
 				{formatTime(route.departure)}
 				{route.origin.name} ({route.departurePlatform}) -> {route.destination.name} ({route.arrivalPlatform})
 				{formatTime(route.arrival)}
-				via {route.line.name.replace(' ', '')} to {route.direction}
 			</div>
 		{:else}
 			Walking: {route.origin.name} -> {route.destination.name} ({route.distance}m)
