@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { SvelteComponentTyped } from 'svelte';
+
 	export let journey: any;
 
 	function pad(num: number, size: number) {
@@ -20,37 +22,63 @@
 </script>
 
 <div>
-	<div>
-		Planned departure <strong
-			>{formatTime(journey.legs[0].departure)} from {journey.legs[0].origin.name}</strong
+	<div id="header">
+		<span class="info-card"
+			>{formatTime(journey.legs[0].departure)} {journey.legs[0].origin.name}</span
 		>
-	</div>
-	<div>
-		Planned arrival <strong
-			>{formatTime(journey.legs[journey.legs.length - 1].arrival)} at {journey.legs[
-				journey.legs.length - 1
-			].destination.name}</strong
+		<div class="route-arrow">
+			<span>
+				{dateDiff(journey.legs[0].departure, journey.legs[journey.legs.length - 1].arrival)}h
+			</span>
+			<span class="arrow-to">&#x2192;</span>
+			<span>
+				{journey.legs.length - 1} changes
+			</span>
+		</div>
+		<span class="info-card"
+			>{formatTime(journey.legs[journey.legs.length - 1].arrival)}
+			{journey.legs[journey.legs.length - 1].destination.name}</span
 		>
-	</div>
-	<div>
-		Duration: {dateDiff(journey.legs[0].departure, journey.legs[journey.legs.length - 1].arrival)},
-		{journey.legs.length - 1} changes
 	</div>
 	<br />
 	{#each journey.legs as route}
+		<br />
+		<br />
 		{#if !route.walking}
+			<div class="info-card">{route.line.name.replace(' ', '')} to {route.direction}</div>
+			<br />
 			<div>
-				<strong>{route.line.name.replace(' ', '')} to {route.direction}</strong>
-			</div>
-			<div>
-				{formatTime(route.departure)}
-				{route.origin.name} ({route.departurePlatform}) -> {route.destination.name} ({route.arrivalPlatform})
+				<strong
+					>{formatTime(route.departure)}
+					{route.origin.name} ({route.departurePlatform})</strong
+				>
+				&#x2192; {route.destination.name} ({route.arrivalPlatform})
 				{formatTime(route.arrival)}
 			</div>
 		{:else}
-			Walking: {route.origin.name} -> {route.destination.name} ({route.distance}m)
+			<div class="info-card">Walking ({route.distance}m)</div>
+			<br />
+			<div>{route.origin.name} &#x2192; {route.destination.name}</div>
 		{/if}
 	{/each}
 
 	<hr />
 </div>
+
+<style>
+	#header {
+		display: flex;
+		align-items: center;
+	}
+
+	.route-arrow {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		margin: 0 1rem;
+	}
+
+	.arrow-to {
+		font-size: 3rem;
+	}
+</style>
