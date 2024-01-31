@@ -60,7 +60,7 @@
 </script>
 
 <div id="main-container">
-	<h1>Find route</h1>
+	<a href="/" target="_self"><h1>Find route</h1></a>
 	<input class="address" type="text" bind:value={startLocationStr} placeholder="Start" />
 	<input class="address" type="text" bind:value={endLocationStr} placeholder="End" />
 
