@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { SvelteComponentTyped } from 'svelte';
-
 	export let journey: any;
 
 	function pad(num: number, size: number) {
@@ -18,6 +16,14 @@
 	function formatTime(time: string) {
 		const date = new Date(time);
 		return pad(date.getHours(), 2) + ':' + pad(date.getMinutes(), 2);
+	}
+
+	function formatDelay(delaySeconds: string) {
+		if (delaySeconds === undefined) return '';
+
+		const delayMillis = Number(delaySeconds) * 1000;
+		const date = new Date(delayMillis - 1000 * 60 * 60);
+		return '(+' + (date.getHours() * 60 + date.getMinutes()) + ' min)';
 	}
 </script>
 
@@ -47,14 +53,34 @@
 		{#if !route.walking}
 			<div class="info-card">{route.line.name.replace(' ', '')} to {route.direction}</div>
 			<br />
-			<div>
-				<strong
-					>{formatTime(route.departure)}
-					{route.origin.name} ({route.departurePlatform})</strong
-				>
-				&#x2192; {route.destination.name} ({route.arrivalPlatform})
-				{formatTime(route.arrival)}
-			</div>
+			<details>
+				<summary>
+					<div>
+						<strong
+							>{formatTime(route.departure)}
+							{route.origin.name} ({route.departurePlatform})</strong
+						>
+						&#x2192; {route.destination.name} ({route.arrivalPlatform})
+						{formatTime(route.arrival)}
+					</div>
+				</summary>
+				<div class="stops">
+					{#each route.stopovers.slice(1, route.stopovers.length - 1) as station}
+						<div>
+							{formatTime(station.arrival)}
+							{station.stop.name}
+							{formatDelay(station.arrivalDelay)}
+						</div>
+					{/each}
+					<div>
+						<strong>
+							{formatTime(route.arrival)}
+							{route.destination.name}
+							{formatDelay(route.arrivalDelay)}
+						</strong>
+					</div>
+				</div>
+			</details>
 		{:else}
 			<div class="info-card">Walking ({route.distance}m)</div>
 			<br />
@@ -80,5 +106,21 @@
 
 	.arrow-to {
 		font-size: 3rem;
+	}
+
+	details > summary {
+		cursor: pointer;
+		list-style: none;
+	}
+
+	details summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.stops {
+		display: flex;
+		flex-direction: column;
+		margin-top: 0.5rem;
+		gap: 0.5rem;
 	}
 </style>
