@@ -59,31 +59,72 @@
 	}
 </script>
 
-<h1>DB-Web</h1>
-<input type="text" bind:value={startLocationStr} placeholder="Start" />
-<input type="text" bind:value={endLocationStr} placeholder="End" />
-<button on:click={findJourneys}>Search</button>
+<div id="main-container">
+	<h1>Find route</h1>
+	<input class="address" type="text" bind:value={startLocationStr} placeholder="Start" />
+	<input class="address" type="text" bind:value={endLocationStr} placeholder="End" />
 
-{#each locationResults as location}
-	<div
-		class="cursor-pointer"
-		on:click={() => {
-			skipNextLocationChange = true;
-			if (currentTextField == Direction.Start) {
-				startLocationStr = location.name ?? location.address;
-				startLocation = location;
-			} else {
-				endLocationStr = location.name ?? location.address;
-				endLocation = location;
-			}
-			locationResults = [];
-		}}
-	>
-		<span>{location.name ?? location.address}</span>
-		<hr />
+	<button id="search" on:click={findJourneys}>Search</button>
+	{#if locationResults}
+		<div id="locations-container">
+			{#each locationResults as location}
+				<div
+					on:click={() => {
+						skipNextLocationChange = true;
+						if (currentTextField == Direction.Start) {
+							startLocationStr = location.name ?? location.address;
+							startLocation = location;
+						} else {
+							endLocationStr = location.name ?? location.address;
+							endLocation = location;
+						}
+						locationResults = [];
+					}}
+				>
+					<span>{location.name ?? location.address}</span>
+				</div>
+				<hr />
+			{/each}
+		</div>
+	{/if}
+</div>
+
+{#if journeyResults}
+	<div class="journeys-container">
+		{#each journeyResults as journeyResult}
+			<Journey journey={journeyResult} />
+		{/each}
 	</div>
-{/each}
+{/if}
 
-{#each journeyResults as journeyResult}
-	<Journey journey={journeyResult} />
-{/each}
+<style>
+	#main-container {
+		position: relative;
+		min-width: 40%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	#search {
+		margin-top: 1rem;
+		width: min-content;
+	}
+
+	#locations-container {
+		width: 100%;
+		position: absolute;
+		top: 14rem;
+		left: 0;
+		background: var(--background);
+	}
+
+	#locations-container > div {
+		cursor: pointer;
+		width: 100%;
+	}
+
+	.address {
+		min-width: 100%;
+	}
+</style>

@@ -2,7 +2,8 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
+		<link rel="icon" href="%sveltekit.assets%/favicon.svg" />
+		<title>DB Route Finder</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		%sveltekit.head%
 	</head>
@@ -10,3 +11,44 @@
 		<div style="display: contents">%sveltekit.body%</div>
 	</body>
 </html>
+<style>
+	:root {
+		--background: #382929;
+		--foreground: #d7d7d7;
+		--primary: #ffd527;
+		--radius: 1em;
+	}
+
+	html {
+		background-color: var(--background);
+		color: var(--foreground);
+	}
+
+	body {
+		width: 100%;
+		min-height: 90vh;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+
+	input[type='text'] {
+		background: var(--background);
+		color: var(--foreground);
+		padding: 1em 2em;
+		margin: 0.5rem;
+		border-radius: var(--radius);
+		border: 2px solid var(--foreground);
+		outline: none;
+	}
+
+	button {
+		background: var(--primary);
+		color: var(--background);
+		padding: 1em 2em;
+		border-radius: var(--radius);
+		border: none;
+		cursor: pointer;
+	}
+</style>
